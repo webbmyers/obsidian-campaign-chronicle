@@ -48,7 +48,7 @@
 
   /* Obsidian renders markdown into .cc-session__body; we just size it. */
   .cc-session__body {
-    /* Ensure rendered content inherits parchment body styles from TomeApp */
+    /* Ensure rendered content inherits parchment body styles from JournalApp */
     min-height: 1px;
   }
 

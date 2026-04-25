@@ -4,7 +4,7 @@ import {
   CampaignChronicleSettings,
   CampaignChronicleSettingTab,
 } from "./settings";
-import { TomeView, VIEW_TYPE_TOME } from "./views/TomeView";
+import { JournalView, VIEW_TYPE_JOURNAL } from "./views/JournalView";
 
 export default class CampaignChroniclePlugin extends Plugin {
   settings: CampaignChronicleSettings = DEFAULT_SETTINGS;
@@ -12,22 +12,22 @@ export default class CampaignChroniclePlugin extends Plugin {
   async onload(): Promise<void> {
     await this.loadSettings();
 
-    // Register the custom Tome reading view.
+    // Register the custom Journal reading view.
     this.registerView(
-      VIEW_TYPE_TOME,
-      (leaf: WorkspaceLeaf) => new TomeView(leaf, this.settings)
+      VIEW_TYPE_JOURNAL,
+      (leaf: WorkspaceLeaf) => new JournalView(leaf, this.settings)
     );
 
-    // Ribbon icon — opens (or reveals) the Tome.
-    this.addRibbonIcon("book-open", "Open Campaign Chronicle", () => {
-      void this.activateTomeView();
+    // Ribbon icon — opens (or reveals) the Journal.
+    this.addRibbonIcon("book-open", "Open journal", () => {
+      void this.activateJournalView();
     });
 
     // Command palette entry.
     this.addCommand({
       id: "open-campaign-chronicle",
-      name: "Open Campaign Chronicle",
-      callback: () => void this.activateTomeView(),
+      name: "Open journal view",
+      callback: () => void this.activateJournalView(),
     });
 
     // Settings tab.
@@ -37,8 +37,8 @@ export default class CampaignChroniclePlugin extends Plugin {
   }
 
   onunload(): void {
-    // Detach all open Tome leaves so their onClose() runs and cleans up.
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_TOME);
+    // No-op. In Obsidian, we should not detach leaves in onunload
+    // to preserve the user's workspace layout.
   }
 
   async loadSettings(): Promise<void> {
@@ -51,23 +51,23 @@ export default class CampaignChroniclePlugin extends Plugin {
 
   async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
-    // Notify any open Tome views to reload with the new settings.
-    this.app.workspace.getLeavesOfType(VIEW_TYPE_TOME).forEach((leaf) => {
-      if (leaf.view instanceof TomeView) {
+    // Notify any open Journal views to reload with the new settings.
+    this.app.workspace.getLeavesOfType(VIEW_TYPE_JOURNAL).forEach((leaf) => {
+      if (leaf.view instanceof JournalView) {
         leaf.view.updateSettings(this.settings);
       }
     });
   }
 
-  /** Open or reveal the Tome view in the current workspace. */
-  private async activateTomeView(): Promise<void> {
-    const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_TOME);
+  /** Open or reveal the Journal view in the current workspace. */
+  private async activateJournalView(): Promise<void> {
+    const existing = this.app.workspace.getLeavesOfType(VIEW_TYPE_JOURNAL);
     if (existing.length > 0) {
-      this.app.workspace.revealLeaf(existing[0]!);
+      await this.app.workspace.revealLeaf(existing[0]!);
       return;
     }
     const leaf = this.app.workspace.getLeaf("tab");
-    await leaf.setViewState({ type: VIEW_TYPE_TOME, active: true });
-    this.app.workspace.revealLeaf(leaf);
+    await leaf.setViewState({ type: VIEW_TYPE_JOURNAL, active: true });
+    await this.app.workspace.revealLeaf(leaf);
   }
 }

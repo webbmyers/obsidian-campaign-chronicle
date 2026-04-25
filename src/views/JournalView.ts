@@ -1,12 +1,12 @@
-import { ItemView, MarkdownRenderer, WorkspaceLeaf, type App } from "obsidian";
+import { ItemView, MarkdownRenderer, WorkspaceLeaf } from "obsidian";
 import { mount, unmount } from "svelte";
-import TomeApp from "../components/TomeApp.svelte";
+import JournalApp from "../components/JournalApp.svelte";
 import { createCampaignStore, type CampaignStore } from "../store/campaignData";
 import type { CampaignChronicleSettings } from "../settings";
 
-export const VIEW_TYPE_TOME = "campaign-chronicle-tome";
+export const VIEW_TYPE_JOURNAL = "campaign-chronicle-journal";
 
-export class TomeView extends ItemView {
+export class JournalView extends ItemView {
   private settings: CampaignChronicleSettings;
   private store: CampaignStore | null = null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,12 +19,12 @@ export class TomeView extends ItemView {
 
   /** Called by Obsidian to get the view's identifier. */
   getViewType(): string {
-    return VIEW_TYPE_TOME;
+    return VIEW_TYPE_JOURNAL;
   }
 
   /** Tab title shown in the Obsidian workspace. */
   getDisplayText(): string {
-    return "Campaign Chronicle";
+    return "Campaign chronicle";
   }
 
   /** Icon for the tab/ribbon (uses Obsidian's Lucide icon set). */
@@ -53,7 +53,7 @@ export class TomeView extends ItemView {
     };
 
     // Mount the Svelte component tree.
-    this.svelteApp = mount(TomeApp, {
+    this.svelteApp = mount(JournalApp, {
       target: container,
       props: {
         store: this.store,

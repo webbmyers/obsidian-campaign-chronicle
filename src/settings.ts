@@ -24,7 +24,7 @@ export interface CampaignChronicleSettings {
 }
 
 export const DEFAULT_SETTINGS: CampaignChronicleSettings = {
-  sessionFolder: "01_Sessions",
+  sessionFolder: "Sessions",
   indexField: "chapter",
   theme: "legacy-scroll",
   includeUnindexed: false,
@@ -43,17 +43,17 @@ export class CampaignChronicleSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Campaign Chronicle" });
+    new Setting(containerEl).setName("Journal").setHeading();
 
     // Session folder
     new Setting(containerEl)
       .setName("Session folder")
       .setDesc(
-        "Vault-relative path to the folder containing your session notes (e.g. 01_Sessions)."
+        "Vault-relative path to the folder containing your session notes (e.g.  Sessions)."
       )
       .addText((text) =>
         text
-          .setPlaceholder("01_Sessions")
+          .setPlaceholder("Sessions")
           .setValue(this.plugin.settings.sessionFolder)
           .onChange(async (value) => {
             this.plugin.settings.sessionFolder = value.trim();
@@ -63,27 +63,39 @@ export class CampaignChronicleSettingTab extends PluginSettingTab {
 
     // Index / sort field
     new Setting(containerEl)
-      .setName("Index frontmatter field")
+      .setName("Frontmatter field for indexing")
       .setDesc(
-        "The frontmatter key used to order session notes (e.g. chapter or session_index). " +
-          "Files missing this field, or with duplicate values, will be listed last with a warning."
+        "The frontmatter key used to order session notes (e.g. \"chapter\" or \"session_index\")."
       )
       .addText((text) =>
         text
-          .setPlaceholder("chapter")
+          .setPlaceholder("Chapter")
           .setValue(this.plugin.settings.indexField)
           .onChange(async (value) => {
-            this.plugin.settings.indexField = value.trim() || "chapter";
+            this.plugin.settings.indexField = value.trim() || "Chapter";
             await this.plugin.saveSettings();
           })
       );
 
+    // Include unindexed toggle
+    new Setting(containerEl)
+      .setName("Include unindexed notes")
+      .setDesc(
+        "Show notes that do not have the frontmatter field for indexing."
+      )
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.settings.includeUnindexed)
+          .onChange(async (value) => {
+            this.plugin.settings.includeUnindexed = value;
+            await this.plugin.saveSettings();
+          })
+      );
     // Theme selector
     new Setting(containerEl)
       .setName("Theme")
       .setDesc(
-        "Visual theme for the Tome. Each theme is a standalone CSS file — " +
-          "power users can copy and customise them manually."
+        "Visual theme for the reading view. Each theme is a standalone CSS file."
       )
       .addDropdown((drop) => {
         for (const t of THEMES) {
@@ -96,21 +108,5 @@ export class CampaignChronicleSettingTab extends PluginSettingTab {
         });
       });
 
-    // Include unindexed toggle
-    new Setting(containerEl)
-      .setName("Include unindexed files")
-      .setDesc(
-        "Show session notes that do not have the index frontmatter field. " +
-          "When enabled, these files are appended at the end with a warning. " +
-          "Disable to show only properly indexed notes."
-      )
-      .addToggle((toggle) =>
-        toggle
-          .setValue(this.plugin.settings.includeUnindexed)
-          .onChange(async (value) => {
-            this.plugin.settings.includeUnindexed = value;
-            await this.plugin.saveSettings();
-          })
-      );
   }
 }

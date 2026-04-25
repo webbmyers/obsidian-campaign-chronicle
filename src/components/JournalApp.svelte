@@ -1,6 +1,6 @@
 <script lang="ts">
-  // TomeApp.svelte
-  // Root component for the Campaign Chronicle Tome view.
+  // JournalApp.svelte
+  // Root component for the Campaign Chronicle Journal view.
   // Layout: fixed top roller → scrollable parchment → fixed bottom roller.
 
   import type { CampaignStore } from "../store/campaignData";
@@ -14,7 +14,7 @@
 </script>
 
 <!-- Root container; data-cc-theme drives CSS variable overrides -->
-<div class="cc-tome-root" data-cc-theme={theme}>
+<div class="cc-journal-root" data-cc-theme={theme}>
 
   <!-- Top roller — always visible, does not scroll -->
   <div class="cc-roller cc-roller--top" aria-hidden="true">
@@ -69,7 +69,7 @@
 
 <style>
   /* ── Root ─────────────────────────────────────────────────────── */
-  .cc-tome-root {
+  .cc-journal-root {
     height: 100%;
     display: flex;
     flex-direction: column;

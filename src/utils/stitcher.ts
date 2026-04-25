@@ -49,7 +49,7 @@ export async function stitchSessions(
   const notes: SessionNote[] = await Promise.all(
     mdFiles.map(async (file) => {
       const cache = app.metadataCache.getFileCache(file);
-      const rawIndex = cache?.frontmatter?.[indexField];
+      const rawIndex: unknown = cache?.frontmatter?.[indexField];
       const index = rawIndex !== undefined ? Number(rawIndex) : NaN;
 
       // Strip YAML frontmatter block from content so we render pure body.

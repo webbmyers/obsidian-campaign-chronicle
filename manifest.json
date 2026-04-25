@@ -3,7 +3,7 @@
 	"name": "Campaign Chronicle",
 	"version": "0.1.0",
 	"minAppVersion": "1.4.0",
-	"description": "An immersive 'Tome' reading view for Obsidian campaign journals. Stitches session notes into a continuous parchment scroll.",
-	"author": "Campaign Chronicle",
+	"description": "An immersive 'Journal' reading view for RPG campaign session logs. Stitches session notes into a continuous document for reading.",
+	"author": "Webb Myers",
 	"isDesktopOnly": false
 }
